@@ -1,4 +1,4 @@
-def filter_by_state(data: list[dict[str, str]], state: str ="EXECUTED") -> list[dict[str, str]]:
+def filter_by_state(data: list[dict[str, str]], state: str = "EXECUTED") -> list[dict[str, str]]:
     """Функция фильтрует список словарей по ключу state"""
 
     filtered_data = []
