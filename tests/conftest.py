@@ -1,5 +1,5 @@
 import pytest
-
+import typing as t
 
 @pytest.fixture(
     params=[
@@ -74,3 +74,93 @@ def sorting_data():
         {'id': 594226727, 'state': 'CANCELED', 'date': '2018-09-12T21:27:25.241689'},
         {'id': 615064591, 'state': 'CANCELED', 'date': '2018-10-14T08:21:33.419441'}
     ]
+
+TransactionType = t.Dict[str, t.Any]
+TransactionsListType = t.List[TransactionType]
+
+@pytest.fixture
+def sample_transactions() -> TransactionsListType:
+    """Возвращает пример списка транзакций."""
+    return [
+        {
+            "id": 939719570,
+            "state": "EXECUTED",
+            "date": "2018-06-30T02:08:58.425572",
+            "operationAmount": {
+                "amount": "9824.07",
+                "currency": {
+                    "name": "USD",
+                    "code": "USD"
+                }
+            },
+            "description": "Перевод организации",
+            "from": "Счет 75106830613657916952",
+            "to": "Счет 11776614605963066702"
+        },
+        {
+            "id": 142264268,
+            "state": "EXECUTED",
+            "date": "2019-04-04T23:20:05.206878",
+            "operationAmount": {
+                "amount": "79114.93",
+                "currency": {
+                    "name": "RUB",
+                    "code": "RUB"
+                }
+            },
+            "description": "Перевод со счета на счет",
+            "from": "Счет 19708645243227258542",
+            "to": "Счет 75651667383060284188"
+        },
+        {
+            "id": 873498234,
+            "state": "CANCELED",
+            "date": "2020-07-15T10:30:00.000000",
+            "operationAmount": {
+                "amount": "1500.00",
+                "currency": {
+                    "name": "EUR",
+                    "code": "EUR"
+                }
+            },
+            "description": "Отмененная операция",
+            "from": None,
+            "to": None
+        },
+        {
+            "id": 567890123,
+            "state": "EXECUTED",
+            "date": "2021-01-01T00:00:00.000000",
+            "operationAmount": {
+                "amount": "5000.00",
+                "currency": {
+                    "name": "USD",
+                    "code": "USD"
+                }
+            },
+            "description": "Покупка товара",
+            "from": "Счет 9876543210",
+            "to": "Счет 0123456789"
+        }
+    ]
+
+@pytest.fixture
+def sample_transactions_for_description():
+    """Фикстура, возвращающая образец списка транзакций."""
+    return [
+        {"id": 1, "description": "Перевод организации"},
+        {"id": 2, "description": "Перевод со счета на счет"},
+        {"id": 3, "description": "Перевод со счета на счет"},
+        {"id": 4, "description": "Перевод с карты на карту"},
+        {"id": 5, "description": "Перевод организации"}
+    ]
+
+@pytest.fixture
+def valid_range():
+    """Предоставляет валидный диапазон номеров для тестов."""
+    return (1, 5)
+
+@pytest.fixture
+def invalid_range():
+    """Предоставляет диапазон, превышающий лимит (некорректный)."""
+    return (1, 10000000000000000)
