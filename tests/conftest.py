@@ -1,4 +1,5 @@
 import typing as t
+from typing import Any
 
 import pytest
 
@@ -19,7 +20,7 @@ import pytest
         ("dddddddddddddddd", "Your input is incorrect"),
     ]
 )
-def data_fixture(request):
+def data_fixture(request: Any) -> Any:
     return request.param
 
 
@@ -40,12 +41,12 @@ def data_fixture(request):
         ("2024-13-01", "Error"),  # несуществующая дата
     ]
 )
-def date_input_output(request):
+def date_input_output(request: Any) -> Any:
     return request.param
 
 
 @pytest.fixture
-def transactions_data():
+def transactions_data() -> list[dict[str, int | str]]:
     return [
         {"id": 41428829, "state": "EXECUTED", "date": "2019-07-03T18:35:29.512364"},
         {"id": 939719570, "state": "EXECUTED", "date": "2018-06-30T02:08:58.425572"},
@@ -55,7 +56,7 @@ def transactions_data():
 
 
 @pytest.fixture
-def sorting_data():
+def sorting_data() -> list[dict[str, int | str]]:
     return [
         {"id": 41428829, "state": "EXECUTED", "date": "2019-07-03T18:35:29.512364"},
         {"id": 939719570, "state": "EXECUTED", "date": "2018-06-30T02:08:58.425572"},
@@ -112,7 +113,7 @@ def sample_transactions() -> TransactionsListType:
 
 
 @pytest.fixture
-def sample_transactions_for_description():
+def sample_transactions_for_description() -> list[dict[str, int | str]]:
     """Фикстура, возвращающая образец списка транзакций."""
     return [
         {"id": 1, "description": "Перевод организации"},
@@ -124,12 +125,12 @@ def sample_transactions_for_description():
 
 
 @pytest.fixture
-def valid_range():
+def valid_range() -> tuple[int, int]:
     """Предоставляет валидный диапазон номеров для тестов."""
     return (1, 5)
 
 
 @pytest.fixture
-def invalid_range():
+def invalid_range() -> tuple[int, int]:
     """Предоставляет диапазон, превышающий лимит (некорректный)."""
     return (1, 10000000000000000)
