@@ -2,7 +2,7 @@ import logging
 from typing import Any
 
 
-def decorator_for_logging(filename: str = "console") -> Any:
+def log(filename: str = "console") -> Any:
     def decorator(func: Any) -> Any:
         def wrapper(*args: tuple[Any, ...], **kwargs: dict[str, Any]) -> Any:
             if filename == "console":

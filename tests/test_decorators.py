@@ -5,7 +5,7 @@ import time
 
 from _pytest.capture import CaptureFixture
 
-from src.decorators import decorator_for_logging
+from src.decorators import log
 
 
 # Тест вывода в консоль
@@ -25,7 +25,7 @@ def test_console_output(capsys: CaptureFixture[str]) -> None:
     root_logger.setLevel(logging.INFO)
 
     # Декорируем функцию для вывода в консоль
-    @decorator_for_logging()
+    @log()
     def get_mask_account(input_account: str) -> str:
         """Функция принимает на вход номер счета и возвращает его маску"""
         account_number = list(input_account)
@@ -67,7 +67,7 @@ def test_file_output() -> None:
     root_logger = logging.getLogger()
     root_logger.handlers.clear()
 
-    @decorator_for_logging(filename="log.log")
+    @log(filename="log.log")
     def get_mask_account(input_account: str) -> str:
         """Функция принимает на вход номер счета и возвращает его маску"""
         account_number = list(input_account)

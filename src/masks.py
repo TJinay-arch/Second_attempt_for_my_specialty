@@ -1,7 +1,7 @@
-from src.decorators import decorator_for_logging
+from src.decorators import log
 
 
-@decorator_for_logging("log.log")
+@log("log.log")
 def get_mask_card_number(input_card: str) -> str:
     """Функция принимает на вход номер и возвращает её маску"""
 
@@ -33,7 +33,7 @@ def get_mask_card_number(input_card: str) -> str:
         return "Your input is incorrect"
 
 
-@decorator_for_logging("log.log")
+@log("log.log")
 def get_mask_account(input_account: str) -> str:
     """Функция принимает на вход номер счета и возвращает его маску"""
 
