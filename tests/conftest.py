@@ -1,7 +1,9 @@
 import typing as t
+from collections.abc import Generator
 from typing import Any
 
 import pytest
+from _pytest.tmpdir import Path, TempPathFactory
 
 
 @pytest.fixture(
@@ -134,3 +136,35 @@ def valid_range() -> tuple[int, int]:
 def invalid_range() -> tuple[int, int]:
     """Предоставляет диапазон, превышающий лимит (некорректный)."""
     return (1, 10000000000000000)
+
+
+@pytest.fixture(scope="session")
+def example_operations_file(tmpdir_factory: TempPathFactory) -> str:
+    temp_dir = tmpdir_factory.mktemp("data")
+    filename = temp_dir / "operations.json"
+    filename.write_text('[{"id": 1, "amount": 100}, {"id": 2, "amount": 200}]', encoding="utf-8")
+    return str(filename)
+
+
+@pytest.fixture
+def empty_file(tmp_path: Path) -> Generator[str, Any, None]:
+    file_path = tmp_path / "empty.json"
+    file_path.touch()
+    yield str(file_path)
+    file_path.unlink(missing_ok=True)
+
+
+@pytest.fixture
+def invalid_json_file(tmp_path: Path) -> Generator[str, Any, None]:
+    file_path = tmp_path / "invalid.json"
+    file_path.write_text("{this_is_not_valid_json}")
+    yield str(file_path)
+    file_path.unlink(missing_ok=True)
+
+
+@pytest.fixture
+def non_list_json_file(tmp_path: Path) -> Generator[str, Any, None]:
+    file_path = tmp_path / "nonlist.json"
+    file_path.write_text('{"key": "value"}')
+    yield str(file_path)
+    file_path.unlink(missing_ok=True)

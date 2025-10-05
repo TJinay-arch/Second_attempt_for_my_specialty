@@ -4,6 +4,7 @@ from typing import Any
 
 def log(filename: str = "console") -> Any:
     """Декоратор с параметром обеспечивающий логирование в файл или консоль"""
+
     def decorator(func: Any) -> Any:
         def wrapper(*args: tuple[Any, ...], **kwargs: dict[str, Any]) -> Any:
             if filename == "console":
