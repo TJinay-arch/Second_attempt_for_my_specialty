@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 API_KEY = os.getenv("EXCHANGE_RATES_API_KEY")
-BASE_URL = "http://api.exchangeratesapi.io/v1/latest"
+BASE_URL = "https://api.apilayer.com/exchangerates_data/convert"
 
 
 def fetch_exchange_rates() -> Any:
@@ -27,8 +27,8 @@ def convert_amount(transaction: Dict[str, Any]) -> float:
     """
     Конвертация суммы транзакции в нужную валюту.
     """
-    amount = transaction.get("amount", 0)
-    currency = transaction.get("currency", "").upper()
+    amount = transaction.get("operationAmount.amount", 0)
+    currency = transaction.get("operationAmount.currency.code", "").upper()
 
     rates = fetch_exchange_rates()
     if currency in ["USD", "EUR"]:

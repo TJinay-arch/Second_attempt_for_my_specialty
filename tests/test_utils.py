@@ -46,8 +46,8 @@ def test_load_transactions_return_empty_list(request: Any, file_fixture: Any, de
 @pytest.mark.parametrize(
     "transaction, expected",
     [
-        ({"amount": 100, "currency": "USD"}, 10000),
-        ({"amount": 100, "currency": "EUR"}, 8333.33),
+        ({"operationAmount.amount": 100, "operationAmount.currency.code": "USD"}, 10000),
+        ({"operationAmount.amount": 100, "operationAmount.currency.code": "EUR"}, 8333.33),
     ],
 )
 def test_convert_amount_with_valid_input(transaction: dict, expected: float) -> None:
@@ -64,7 +64,7 @@ def test_convert_amount_with_error_response() -> None:
     """
     Тест проверяет поведение функции при ошибочном ответе от API.
     """
-    transaction = {"amount": 100, "currency": "USD"}
+    transaction = {"operationAmount.amount": 100, "operationAmount.currency.code": "USD"}
     with patch("src.external_api.fetch_exchange_rates", side_effect=RuntimeError("Ошибка при получении данных")):
         with pytest.raises(RuntimeError):
             convert_amount(transaction)
