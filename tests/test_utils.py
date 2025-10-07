@@ -8,6 +8,12 @@ from src.external_api import convert_amount, fetch_exchange_rates
 from src.utils import load_transactions_from_file
 
 
+def test_load_transactions_file_not_found() -> None:
+    fake_file_path = "/path/to/fake/file.json"
+    result = load_transactions_from_file(fake_file_path)
+    assert result == [], "Должен вернуть пустой список, если файл не найден"
+
+
 def test_load_transactions(example_operations_file: TempPathFactory) -> None:
     transactions = load_transactions_from_file(example_operations_file)
     assert len(transactions) == 2
@@ -37,24 +43,31 @@ def test_load_transactions_return_empty_list(request: Any, file_fixture: Any, de
     assert result == [], f"{description}: Должен вернуть пустой список"
 
 
-@pytest.mark.parametrize("amount, currency, expected", [(100, "USD", 10000), (100, "EUR", 8333.33)])
-def test_convert_amount_with_valid_input(amount: int, currency: str, expected: int | float) -> None:
+@pytest.mark.parametrize(
+    "transaction, expected",
+    [
+        ({"amount": 100, "currency": "USD"}, 10000),
+        ({"amount": 100, "currency": "EUR"}, 8333.33),
+    ],
+)
+def test_convert_amount_with_valid_input(transaction: dict, expected: float) -> None:
     """
     Тест проверяет успешную конвертацию валюты при условии правильного API-ответа.
     """
-
     with patch("src.external_api.fetch_exchange_rates", return_value={"RUB": 100, "USD": 1, "EUR": 1.2}):
-        result = convert_amount(amount, currency)
+        result = convert_amount(transaction)
         assert round(result, 2) == expected, f"Сумма {result} не равна ожидаемой {expected}"
 
 
+# Тест на ошибку API
 def test_convert_amount_with_error_response() -> None:
     """
     Тест проверяет поведение функции при ошибочном ответе от API.
     """
+    transaction = {"amount": 100, "currency": "USD"}
     with patch("src.external_api.fetch_exchange_rates", side_effect=RuntimeError("Ошибка при получении данных")):
         with pytest.raises(RuntimeError):
-            convert_amount(100, "USD")
+            convert_amount(transaction)
 
 
 MOCK_RESPONSE_SUCCESS = {"rates": {"RUB": 100, "USD": 1, "EUR": 1.2}, "timestamp": 1638321600}

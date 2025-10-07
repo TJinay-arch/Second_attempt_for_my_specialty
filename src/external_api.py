@@ -1,5 +1,5 @@
 import os
-from typing import Any
+from typing import Any, Dict
 
 import requests
 from dotenv import load_dotenv
@@ -23,17 +23,20 @@ def fetch_exchange_rates() -> Any:
     return rates
 
 
-def convert_amount(amount: Any, currency: Any) -> float:
+def convert_amount(transaction: Dict[str, Any]) -> float:
     """
-    Конвертация суммы в нужную валюту.
+    Конвертация суммы транзакции в нужную валюту.
     """
+    amount = transaction.get("amount", 0)
+    currency = transaction.get("currency", "").upper()
+
     rates = fetch_exchange_rates()
-    if currency.upper() in ["USD", "EUR"]:
-        rub_rate = rates["RUB"]  # Курс рубля
-        base_currency_rate = rates[currency.upper()]  # Текущий курс нужной валюты
+    if currency in ["USD", "EUR"]:
+        rub_rate = rates["RUB"]
+        base_currency_rate = rates[currency]
         converted_amount = amount * (rub_rate / base_currency_rate)
         return float(converted_amount)
-    elif currency.upper() == "RUB":
+    elif currency == "RUB":
         return float(amount)
     else:
         raise ValueError(f"Валюта '{currency}' не поддерживается.")
