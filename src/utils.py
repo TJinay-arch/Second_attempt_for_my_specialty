@@ -3,6 +3,7 @@ import os
 from typing import Any
 
 
+
 def load_transactions_from_file(file_path: Any) -> list:
     """
     Функция принимает путь до JSON-файла и возвращает список словарей с данными о транзакциях.
@@ -13,7 +14,7 @@ def load_transactions_from_file(file_path: Any) -> list:
 
     try:
         with open(file_path, "r", encoding="utf-8") as file:
-            transactions = json.load(file)  # Используем json.load(), так как работаем с файлом
+            transactions = json.load(file)
             if not isinstance(transactions, list):
                 return []  # Если данные не являются списком, возвращаем пустой список
             return transactions

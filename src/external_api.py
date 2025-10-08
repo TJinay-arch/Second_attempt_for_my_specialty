@@ -6,14 +6,14 @@ from dotenv import load_dotenv
 
 load_dotenv()
 API_KEY = os.getenv("EXCHANGE_RATES_API_KEY")
-BASE_URL = "https://api.apilayer.com/exchangerates_data/convert"
+BASE_URL = "https://api.apilayer.com/exchangerates_data/latest"
 
 
 def fetch_exchange_rates() -> Any:
     """
     Получение текущих курсов валют.
     """
-    params = {"access_key": API_KEY, "symbols": "RUB,EUR,USD", "format": 1}
+    params = {"base": "RUB", "symbols": "USD,EUR", "apikey": API_KEY}
     response = requests.get(BASE_URL, params=params)
     if response.status_code != 200:
         raise RuntimeError(
@@ -27,7 +27,7 @@ def convert_amount(transaction: Dict[str, Any]) -> float:
     """
     Конвертация суммы транзакции в нужную валюту.
     """
-    amount = transaction.get("operationAmount.amount", 0)
+    amount = float(transaction.get("operationAmount", {}).get("amount", 0))
     currency = transaction.get("operationAmount.currency.code", "").upper()
 
     rates = fetch_exchange_rates()
@@ -37,6 +37,6 @@ def convert_amount(transaction: Dict[str, Any]) -> float:
         converted_amount = amount * (rub_rate / base_currency_rate)
         return float(converted_amount)
     elif currency == "RUB":
-        return float(amount)
+        return amount
     else:
         raise ValueError(f"Валюта '{currency}' не поддерживается.")
