@@ -46,15 +46,29 @@ def test_load_transactions_return_empty_list(request: Any, file_fixture: Any, de
 @pytest.mark.parametrize(
     "transaction, expected",
     [
-        ({"operationAmount.amount": 100, "operationAmount.currency.code": "USD"}, 10000),
-        ({"operationAmount.amount": 100, "operationAmount.currency.code": "EUR"}, 8333.33),
+        ({
+            "operationAmount": {
+                "amount": 100,
+                "currency": {
+                    "code": "USD"
+                }
+            }
+        }, 8145.31),
+        ({
+            "operationAmount": {
+                "amount": 100,
+                "currency": {
+                    "code": "EUR"
+                }
+            }
+        }, 9468.8),
     ],
 )
 def test_convert_amount_with_valid_input(transaction: dict, expected: float) -> None:
     """
     Тест проверяет успешную конвертацию валюты при условии правильного API-ответа.
     """
-    with patch("src.external_api.fetch_exchange_rates", return_value={"RUB": 100, "USD": 1, "EUR": 1.2}):
+    with patch("src.external_api.fetch_exchange_rates", return_value={"RUB": 1, "USD":0.012277, "EUR": 0.010561}):
         result = convert_amount(transaction)
         assert round(result, 2) == expected, f"Сумма {result} не равна ожидаемой {expected}"
 
@@ -64,13 +78,38 @@ def test_convert_amount_with_error_response() -> None:
     """
     Тест проверяет поведение функции при ошибочном ответе от API.
     """
-    transaction = {"operationAmount.amount": 100, "operationAmount.currency.code": "USD"}
+    transaction = {
+        "operationAmount": {
+            "amount": 100,
+            "currency": {
+                "code": "USD"
+            }
+        }
+    }
     with patch("src.external_api.fetch_exchange_rates", side_effect=RuntimeError("Ошибка при получении данных")):
         with pytest.raises(RuntimeError):
             convert_amount(transaction)
 
 
-MOCK_RESPONSE_SUCCESS = {"rates": {"RUB": 100, "USD": 1, "EUR": 1.2}, "timestamp": 1638321600}
+# Тест на случай, когда валюта не поддерживается
+def test_convert_amount_with_unknown_currency() -> None:
+    """
+    Тест проверяет поведение функции при неизвестной валюте.
+    """
+    transaction = {
+        "operationAmount": {
+            "amount": 100,
+            "currency": {
+                "code": "GBP"
+            }
+        }
+    }
+    with patch("src.external_api.fetch_exchange_rates", return_value={"RUB": 1, "USD": 0.012277, "EUR": 0.010561}):
+        with pytest.raises(ValueError) as excinfo:
+            convert_amount(transaction)
+    assert "Валюта 'GBP'" in str(excinfo.value), "Исключение не содержит требуемое сообщение"
+
+MOCK_RESPONSE_SUCCESS = {"rates": {"RUB": 1, "USD":0.012277, "EUR": 0.010561}, "timestamp": 1638321600}
 
 
 @patch("src.external_api.requests.get")
@@ -83,9 +122,9 @@ def test_fetch_exchange_rates_success(mock_get: Any) -> None:
     rates = fetch_exchange_rates()
 
     # Проверяем результат
-    assert rates["RUB"] == 100
-    assert rates["USD"] == 1
-    assert rates["EUR"] == 1.2
+    assert rates["RUB"] == 1
+    assert rates["USD"] == 0.012277
+    assert rates["EUR"] == 0.010561
 
 
 @patch("src.external_api.requests.get")

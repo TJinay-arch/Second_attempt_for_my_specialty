@@ -28,14 +28,13 @@ def convert_amount(transaction: Dict[str, Any]) -> float:
     Конвертация суммы транзакции в нужную валюту.
     """
     amount = float(transaction.get("operationAmount", {}).get("amount", 0))
-    currency = transaction.get("operationAmount.currency.code", "").upper()
+    currency = transaction.get("operationAmount", {}).get("currency", {}).get("code", "").upper()
 
     rates = fetch_exchange_rates()
     if currency in ["USD", "EUR"]:
-        rub_rate = rates["RUB"]
         base_currency_rate = rates[currency]
-        converted_amount = amount * (rub_rate / base_currency_rate)
-        return float(converted_amount)
+        converted_amount = float(amount / base_currency_rate)
+        return round(converted_amount, 2)
     elif currency == "RUB":
         return amount
     else:
