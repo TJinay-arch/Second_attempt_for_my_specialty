@@ -1,8 +1,11 @@
-from src.masks import get_mask_card_number
-from src.masks import get_mask_account
-from src.widget import mask_account_card, get_date
+import pprint
 
-#example = input("Введите номер карты: ")
-#print(mask_account_card(example))
-example_one = input("Введите дату")
-print(get_date(example_one))
+from src.file_reader import file_reader_csv, file_reader_excel
+
+if __name__ == "__main__":
+    print("\nДанные из csv-файла\n")
+    file = file_reader_csv("./data/transactions.csv")
+    pprint.pprint(file[:2])
+    print("\nДанные из excel-файла\n")
+    file_excel = file_reader_excel("./data/transactions_excel.xlsx")
+    pprint.pprint(file_excel[:2])
