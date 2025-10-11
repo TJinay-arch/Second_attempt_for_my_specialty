@@ -1,8 +1,7 @@
 import json
+import logging
 import os
 from typing import Any
-import logging
-
 
 utils_logger = logging.getLogger("utils.py")
 utils_logger.setLevel(logging.DEBUG)
@@ -18,6 +17,7 @@ file_formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(m
 get_mask_handler.setFormatter(file_formatter)
 
 utils_logger.addHandler(get_mask_handler)
+
 
 def load_transactions_from_file(file_path: Any) -> list:
     """

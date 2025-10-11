@@ -2,8 +2,10 @@ import typing as t
 from collections.abc import Generator
 from typing import Any
 
+import pandas as pd
 import pytest
 from _pytest.tmpdir import Path, TempPathFactory
+from pandas import DataFrame
 
 
 @pytest.fixture(
@@ -168,3 +170,46 @@ def non_list_json_file(tmp_path: Path) -> Generator[str, Any, None]:
     file_path.write_text('{"key": "value"}')
     yield str(file_path)
     file_path.unlink(missing_ok=True)
+
+
+# Для тестирования чтения данных из csv-файла (модуль - test_file_reader)
+@pytest.fixture
+def csv_content() -> str:
+    return (
+        "id;state;date;amount;currency_name;currency_code;from;to;description\n"
+        "650703;EXECUTED;2023-09-05T11:30:32Z;16210;Sol;PEN;"
+        "Счет 58803664561298323391;Счет 39745660563456619397;Перевод организации\n"
+        "3598919;EXECUTED;2020-12-06T23:00:58Z;29740;Peso;COP;"
+        "Discover 3172601889670065;Discover 0720428384694643;Перевод с карты на карту\n"
+    )
+
+
+# Для тестирования чтения данных из csv-файла (модуль - test_file_reader)
+@pytest.fixture
+def excel_dataframe() -> DataFrame:
+    return pd.DataFrame(
+        [
+            {
+                "amount": 16210.0,
+                "currency_code": "PEN",
+                "currency_name": "Sol",
+                "date": "2023-09-05T11:30:32Z",
+                "description": "Перевод организации",
+                "from": "Счет 58803664561298323391",
+                "id": 650703.0,
+                "state": "EXECUTED",
+                "to": "Счет 39745660563456619397",
+            },
+            {
+                "amount": 29740.0,
+                "currency_code": "COP",
+                "currency_name": "Peso",
+                "date": "2020-12-06T23:00:58Z",
+                "description": "Перевод с карты на карту",
+                "from": "Discover 3172601889670065",
+                "id": 3598919.0,
+                "state": "EXECUTED",
+                "to": "Discover 0720428384694643",
+            },
+        ]
+    )
