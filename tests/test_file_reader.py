@@ -3,7 +3,7 @@ from unittest.mock import mock_open, patch
 import pytest
 from pandas.core.interchange.dataframe_protocol import DataFrame
 
-from main import file_reader_csv, file_reader_excel
+from src.file_reader import file_reader_csv, file_reader_excel
 
 
 @pytest.mark.parametrize(
