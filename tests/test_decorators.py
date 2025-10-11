@@ -58,7 +58,7 @@ def test_console_output(capsys: CaptureFixture[str]) -> None:
 def test_file_output() -> None:
     """Тестирует запись логов в файл и сравнивает результат работы функции"""
 
-    file_log = r"C:\Users\ilya-\PycharmProjects\bank_module\logs\log.log"
+    file_log = r"C:\Users\ilya-\PycharmProjects\bank_module\logs\decorators.log"
 
     if os.path.exists(file_log):
         os.remove(file_log)
