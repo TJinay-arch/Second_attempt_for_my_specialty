@@ -24,9 +24,6 @@ def load_transactions_from_file(file_path: Any) -> list:
     Функция принимает путь до JSON-файла и возвращает список словарей с данными о транзакциях.
     Если файл не найден, пустой или содержит не список, возвращает пустой список.
     """
-    if not os.path.exists(file_path):
-        utils_logger.error("Os path isn't exists (str - 28)\n")
-        return []  # Если файл не существует, возвращаем пустой список
 
     try:
         with open(file_path, "r", encoding="utf-8") as file:
