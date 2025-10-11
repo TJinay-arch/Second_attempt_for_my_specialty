@@ -56,9 +56,9 @@ def test_console_output(capsys: CaptureFixture[str]) -> None:
 
 # Тест вывода в файл
 def test_file_output() -> None:
-    """Тестирует запись логов в файл log.log и сравнивает результат работы функции"""
+    """Тестирует запись логов в файл и сравнивает результат работы функции"""
 
-    file_log = r"C:\Users\ilya-\PycharmProjects\bank_module\log.log"
+    file_log = r"C:\Users\ilya-\PycharmProjects\bank_module\logs\log.log"
 
     if os.path.exists(file_log):
         os.remove(file_log)
@@ -67,7 +67,7 @@ def test_file_output() -> None:
     root_logger = logging.getLogger()
     root_logger.handlers.clear()
 
-    @log(filename="log.log")
+    @log(filename=file_log)
     def get_mask_account(input_account: str) -> str:
         """Функция принимает на вход номер счета и возвращает его маску"""
         account_number = list(input_account)
