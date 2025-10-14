@@ -3,8 +3,7 @@ import typing as t
 import pytest
 from mypy.build import Mapping
 
-from src.generators import (card_number_generator, filter_by_currency,
-                            transaction_descriptions)
+from src.generators import card_number_generator, filter_by_currency, transaction_descriptions
 
 TransactionType = t.Dict[str, t.Any]
 TransactionsListType = t.List[TransactionType]

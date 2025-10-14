@@ -78,3 +78,5 @@ from src.module_name import filter_by_currency, transaction_descriptions
 ```
 pytest ./src/test_file_reader.py
 ```
+##Функция main
+Реализована функция которая связывает в себе все функциональности проекта и выдет список отсортированных операций по запросам пользователя
